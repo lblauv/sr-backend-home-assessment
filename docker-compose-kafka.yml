@@ -1,0 +1,47 @@
+version: '2'
+services:
+
+  zookeeper:
+    image: bitnami/zookeeper:3.8.1
+    container_name: zookeeper
+    restart: unless-stopped
+    ports:
+      - "2181:2181"
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+
+  kafka:
+    image: bitnami/kafka:3.6.1
+    container_name: kafka
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+
+    # Expose two ports:
+    ports:
+      - "9092:9092"   # external listener (your host → container)
+      - "9093:9093"   # internal listener (Flink → container)
+
+    environment:
+      # 1) ZK connection
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+
+      # 2) Define two listeners on different ports
+      KAFKA_LISTENERS: "EXTERNAL://0.0.0.0:9092,INTERNAL://0.0.0.0:9093"
+
+      # 3) Advertise those listeners by name:
+      #    - external clients (your Mac) connect on localhost:9092
+      #    - internal clients (inside Docker) connect on kafka:9093
+      KAFKA_ADVERTISED_LISTENERS: "EXTERNAL://localhost:9092,INTERNAL://kafka:9093"
+
+      # 4) Map listener names to PLAINTEXT protocol
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT"
+
+      # 5) Use the internal listener for inter-broker traffic
+      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+
+      # 6) Auto-create your two topics
+      KAFKA_CREATE_TOPICS: "orders:1:1,processed-orders:1:1"
+
+      # 7) Allow plaintext (NOT FOR PROD)
+      ALLOW_PLAINTEXT_LISTENER: "yes"

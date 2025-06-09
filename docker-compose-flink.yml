@@ -1,0 +1,29 @@
+version: '2.1'
+
+services:
+  jobmanager:
+    image: flink:1.14.6-scala_2.12-java8
+    platform: linux/amd64
+    container_name: flink-jobmanager
+    ports:
+      - "8081:8081"   # REST + Web UI
+      - "6123:6123"   # RPC port for TaskManagers
+    command: jobmanager
+    environment:
+      # tell Flink to advertise the service name 'jobmanager'
+      JOB_MANAGER_RPC_ADDRESS: jobmanager
+      # bind REST/UI to all interfaces so localhost:8081 works
+      FLINK_PROPERTIES: |
+        rest.address: 0.0.0.0
+        rest.bind-address: 0.0.0.0
+
+  taskmanager:
+    image: flink:1.14.6-scala_2.12-java8
+    platform: linux/amd64
+    container_name: flink-taskmanager
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    environment:
+      # point at the *service* 'jobmanager', not the container_name
+      JOB_MANAGER_RPC_ADDRESS: jobmanager

@@ -1,0 +1,5 @@
+com/company/flink/model/OrderAggregate.class
+com/company/flink/OrderAggregationJob$2.class
+com/company/flink/OrderAggregationJob.class
+com/company/flink/model/Order.class
+com/company/flink/OrderAggregationJob$1.class

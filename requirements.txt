@@ -1,0 +1,2 @@
+kafka-python==2.1.5
+tzlocal==4.3.1
