@@ -182,3 +182,27 @@ If you prefer step‑by‑step control, follow these commands:
 ---
 
 By choosing the automated script you save time and reduce manual commands; the manual steps give you deeper visibility and control over each stage of the pipeline.
+
+
+## Local Environment Adjustments & Lessons Learned
+
+On an Apple M1 (arm64) running Docker Desktop, we hit a few platform- and version-related issues. Here’s what we changed:
+
+- **Zookeeper image**  
+  Swapped the original `wurstmeister/zookeeper` (x86-only) for `bitnami/zookeeper:3.8.1` (multi-arch) to avoid QEMU crashes.
+
+- **Kafka listeners**  
+  Configured dual listeners so that:
+  - **INTERNAL** (`kafka:9092`) is used by Flink inside Docker  
+  - **EXTERNAL** (`localhost:29092`) is used by the Python producer and host clients  
+
+- **Connector version alignment**  
+  Matched the Kafka connector version to Flink 1.14.6 in `pom.xml` (removed 2.x and Kafka 4.0 artifacts).
+
+- **Removed JAXB dependency**  
+  Java 11+ no longer bundles `javax.xml.bind`, so we switched all timestamp parsing to `Instant.parse(…)`.
+
+- **Platform forcing**  
+  Added `platform: linux/amd64` to all Compose services (ZK, Kafka, Flink) to ensure compatibility under QEMU.
+
+With these tweaks, our “orders → Flink → processed-orders” pipeline runs reliably on macOS M1.  
