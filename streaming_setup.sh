@@ -73,7 +73,15 @@ wait_for_port() {
   done
   echo " ok"
 }
-
+# ------------------------------------------------------------------------------
+# Run Java unit tests for the flink job
+# ------------------------------------------------------------------------------
+run_java_tests() {
+  echo "🏃 Running Java unit tests..."
+  pushd flink-job >/dev/null
+    mvn test
+  popd >/dev/null
+}
 # ------------------------------------------------------------------------------
 # Build the Flink fat-jar via Maven
 # ------------------------------------------------------------------------------
@@ -138,6 +146,7 @@ case "${1:-}" in
     start_flink
     wait_for_port localhost 9092    # Kafka external listener
     wait_for_port localhost 8081    # Flink REST UI
+    run_java_tests
     build_flink_jar
     deploy_jar
     submit_job
