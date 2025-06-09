@@ -183,6 +183,30 @@ If you prefer step‑by‑step control, follow these commands:
 
 By choosing the automated script you save time and reduce manual commands; the manual steps give you deeper visibility and control over each stage of the pipeline.
 
+## Running the Java Unit Tests
+
+We’ve included a small suite of JUnit tests under `flink-job/src/test/java` to verify:
+
+- JSON ↔ `Order` mapping  
+- JSON ↔ `OrderAggregate` mapping  
+- Basic aggregation logic for one window  
+
+To execute them:
+
+1. **Change into the Flink project directory**  
+   ```bash
+   cd flink-job
+   mvn clean test
+   ```
+You should see output similar to:
+  ```
+    -------------------------------------------------------
+    T E S T S
+    -------------------------------------------------------
+    Running com.company.flink.OrderAggregationJobTest
+    Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+  ```
+
 
 ## Local Environment Adjustments & Lessons Learned
 
