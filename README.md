@@ -227,6 +227,6 @@ On an Apple M1 (arm64) running Docker Desktop, we hit a few platform- and versio
   Java 11+ no longer bundles `javax.xml.bind`, so we switched all timestamp parsing to `Instant.parse(…)`.
 
 - **Platform forcing**  
-  Added `platform: linux/amd64` to all Compose services (ZK, Kafka, Flink) to ensure compatibility under QEMU.
+  Added `platform: linux/amd64` to all Flink services to ensure compatibility under QEMU.
 
 With these tweaks, our “orders → Flink → processed-orders” pipeline runs reliably on macOS M1.  
