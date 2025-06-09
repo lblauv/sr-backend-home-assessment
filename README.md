@@ -57,7 +57,7 @@ This repository demonstrates an end-to-end streaming data pipeline using Apache 
 
 ## Setup & Execution
 
-This section describes two ways to launch and run the streaming pipeline: an **automated** approach using our `streaming_setup.sh` helper script, and a **manual** approach for full control and visibility.
+This section describes two ways to launch and run the streaming pipeline: an **automated** approach using the `streaming_setup.sh` helper script, and a **manual** approach for full control and visibility.
 
 ### 🔧 Automated Pipeline
 
@@ -181,11 +181,10 @@ If you prefer step‑by‑step control, follow these commands:
 
 ---
 
-By choosing the automated script you save time and reduce manual commands; the manual steps give you deeper visibility and control over each stage of the pipeline.
 
 ## Running the Java Unit Tests
 
-We’ve included a small suite of JUnit tests under `flink-job/src/test/java` to verify:
+I included a small suite of JUnit tests under `flink-job/src/test/java` to verify:
 
 - JSON ↔ `Order` mapping  
 - JSON ↔ `OrderAggregate` mapping  
@@ -210,7 +209,7 @@ You should see output similar to:
 
 ## Local Environment Adjustments & Lessons Learned
 
-On an Apple M1 (arm64) running Docker Desktop, we hit a few platform- and version-related issues. Here’s what we changed:
+On an Apple M1 (arm64) running Docker Desktop, I hit a few platform- and version-related issues. Here’s what I changed:
 
 - **Zookeeper image**  
   Swapped the original `wurstmeister/zookeeper` (x86-only) for `bitnami/zookeeper:3.8.1` (multi-arch) to avoid QEMU crashes.
@@ -224,9 +223,9 @@ On an Apple M1 (arm64) running Docker Desktop, we hit a few platform- and versio
   Matched the Kafka connector version to Flink 1.14.6 in `pom.xml` (removed 2.x and Kafka 4.0 artifacts).
 
 - **Removed JAXB dependency**  
-  Java 11+ no longer bundles `javax.xml.bind`, so we switched all timestamp parsing to `Instant.parse(…)`.
+  Java 11+ no longer bundles `javax.xml.bind`, so I switched all timestamp parsing to `Instant.parse(…)`.
 
 - **Platform forcing**  
   Added `platform: linux/amd64` to all Flink services to ensure compatibility under QEMU.
 
-With these tweaks, our “orders → Flink → processed-orders” pipeline runs reliably on macOS M1.  
+With these tweaks, the “orders → Flink → processed-orders” pipeline runs reliably on macOS M1.  
